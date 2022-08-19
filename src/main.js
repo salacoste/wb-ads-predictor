@@ -1,17 +1,14 @@
 const WBApi = require('wb-private-api')
 const Constants = require('wb-private-api/src/Constants')
 
-const wbapi = new WBApi()
 
-async function init(dest, destDesc) {
+async function init(destination, destDesc) {
+  const wbapi = new WBApi({ destination })
   const KEYWORD = 'менструальная чаша';
   const ads = await wbapi.getSearchAds(KEYWORD)
   const catalog = await wbapi.search(KEYWORD, 1)
   const productIds = ads.adverts.map((ad) => ad.id);
-  const nmsDeliveryData = await wbapi.getDeliveryDataByNms({
-    productIds,
-    dest,
-  });
+  const nmsDeliveryData = await wbapi.getDeliveryDataByNms(productIds);
 
   nmsDeliveryData.forEach((product) => {
     const idx = ads.adverts.findIndex((ad) => ad.id === product.id);
@@ -30,7 +27,7 @@ async function init(dest, destDesc) {
   ads.adverts = ads.adverts.filter((ad) => ad.deliveryHours < maxDeliveryTime)
   ads.adverts.sort((a, b) => a.cpm + b.cpm)
   const ads_new = ads.adverts.splice(0, 10)
-  
+
   console.log(destDesc + " | Макс. Время Доставки: " + maxDeliveryTime)
   console.log('*************СТРАНИЦА 1*************')
   ads_new.map((ad, idx) => {
@@ -42,11 +39,14 @@ async function init(dest, destDesc) {
   })
 }
 
-init(Constants.DESTINATIONS.UFO, "Краснодар")
-init(Constants.DESTINATIONS.MSK, "Москва")
+init(Constants.DESTINATIONS.KRASNODAR, "Краснодар")
+init(Constants.DESTINATIONS.MOSCOW, "Москва")
+init(Constants.DESTINATIONS.HABAROVSK, "Хабаровск")
+init(Constants.DESTINATIONS.EKATERINBURG, "Екатеринбург")
+init(Constants.DESTINATIONS.NOVOSIBIRSK, "Новосибирск")
 
 
-function getDeliveryTime(t) { //47 - Сумма time1 и time2 у ТОП-1 в обычной выдаче (Satisfyer 6 + 41 = 47) 
+function getDeliveryTime(t) { //47 - Сумма time1 и time2 у ТОП-1 в обычной выдаче (Satisfyer 6 + 41 = 47)
   var e = (new Date).getHours() //5
   var r = e + t // Сумма текущих часов с t //52
   var n = 0; //2 //Делим r на 2 без остатка
