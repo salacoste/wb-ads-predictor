@@ -1,9 +1,7 @@
-const WBApi = require('wb-private-api')
-const Constants = require('wb-private-api/src/Constants')
-
+const { WBPrivateAPI, Constants } = require('wb-private-api')
 
 async function init(destination, destDesc) {
-  const wbapi = new WBApi({ destination })
+  const wbapi = new WBPrivateAPI({ destination })
   const KEYWORD = 'менструальная чаша';
   const ads = await wbapi.getSearchAds(KEYWORD)
   const catalog = await wbapi.search(KEYWORD, 1)
@@ -31,7 +29,7 @@ async function init(destination, destDesc) {
   console.log(destDesc + " | Макс. Время Доставки: " + maxDeliveryTime)
   console.log('*************СТРАНИЦА 1*************')
   ads_new.map((ad, idx) => {
-    console.log(idx + 1 + "|\t CPM:" + ad.cpm + "\t | " + ad.brand, ad.brand == 'CupLee' ? "\t <----- " + ad.deliveryHours  : "")
+    console.log(idx + 1 + "|\t CPM:" + ad.cpm + "\t | " + ad.brand, ad.brand == 'Менструальные чаши Cuplee' ? "\t <----- " + ad.deliveryHours  : "")
     if(idx == 4)
       console.log('*************СТРАНИЦА 2*************')
     if(idx == 9)
@@ -44,7 +42,6 @@ init(Constants.DESTINATIONS.MOSCOW, "Москва")
 init(Constants.DESTINATIONS.HABAROVSK, "Хабаровск")
 init(Constants.DESTINATIONS.EKATERINBURG, "Екатеринбург")
 init(Constants.DESTINATIONS.NOVOSIBIRSK, "Новосибирск")
-
 
 function getDeliveryTime(t) { //47 - Сумма time1 и time2 у ТОП-1 в обычной выдаче (Satisfyer 6 + 41 = 47)
   var e = (new Date).getHours() //5
